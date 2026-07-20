@@ -1,12 +1,12 @@
-# 🌌 AtomOracq: Hyperlocal Urban Air Quality Digital Twin & Quantum-Classical Decision Optimizer
+# 🌌 AeronicX: Hyperlocal Urban Air Quality Digital Twin & Quantum-Classical Decision Optimizer
 
-**AtomOracq** is an enterprise-grade full-stack environmental intelligence system and hyperlocal digital twin platform. Engineered to merge real-time metropolitan atmospheric telemetry with Stochastic Quantum Simulations, Game-Theoretic Source Attribution, and Server-Side Explainable AI (XAI), the platform coordinates municipal policy thresholds, predicts hazardous micro-scale particulate surges, and runs quantum-inspired optimization schedules to maximize carbon sequestration and pollution containment.
+**AeronicX** is an enterprise-grade full-stack environmental intelligence system and hyperlocal digital twin platform. Engineered to merge real-time metropolitan atmospheric telemetry with Stochastic Quantum Simulations, Game-Theoretic Source Attribution, and Server-Side Explainable AI (XAI), the platform coordinates municipal policy thresholds, predicts hazardous micro-scale particulate surges, and runs quantum-inspired optimization schedules to maximize carbon sequestration and pollution containment.
 
 ---
 
 ## 🚀 1. Brief Introduction
 
-AtomOracq provides municipal planners, environmental agencies, and city engineers with a multi-layered, interactive simulation workspace. Instead of relying on static, delayed regional averages, the platform constructs a live, 1km²-resolution grid of urban microclimates. By combining live weather feeds with simulated quantum algorithms, it models how vehicular emissions, industrial exhaust, and construction dust propagate under dynamic meteorological forces. Planners can test policy interventions (e.g., EV zoning, construction pauses, industrial scrubbing hours) and instantly observe simulated municipal cost-benefit convergence and direct AQI/CO₂ reductions in real-time.
+AeronicX provides municipal planners, environmental agencies, and city engineers with a multi-layered, interactive simulation workspace. Instead of relying on static, delayed regional averages, the platform constructs a live, 1km²-resolution grid of urban microclimates. By combining live weather feeds with simulated quantum algorithms, it models how vehicular emissions, industrial exhaust, and construction dust propagate under dynamic meteorological forces. Planners can test policy interventions (e.g., EV zoning, construction pauses, industrial scrubbing hours) and instantly observe simulated municipal cost-benefit convergence and direct AQI/CO₂ reductions in real-time.
 
 ---
 
@@ -14,7 +14,7 @@ AtomOracq provides municipal planners, environmental agencies, and city engineer
 
 Modern urban centers require immediate, actionable policy insights. Traditional monitoring platforms suffer from retrospective static reporting (displaying historical data without predictive capability) and "black box" recommendations (flagging severe pollution spikes without providing clear causal pathways or optimized abatement directives).
 
-AtomOracq implements a closed-loop digital twin architecture structured as follows:
+AeronicX implements a closed-loop digital twin architecture structured as follows:
 
 ```
                                       ┌────────────────────────┐
@@ -54,7 +54,7 @@ AtomOracq implements a closed-loop digital twin architecture structured as follo
 ```
 
 ### The Core Sync Engine: `AeronicxOrchestrator`
-Disparate dashboards often lead to fragmented data and mismatched parameters. AtomOracq introduces the `AeronicxOrchestrator` (`/src/services/dataOrchestrator.ts`), a centralized state-synchronization manager that coordinates physical parameters across the entire platform. 
+Disparate dashboards often lead to fragmented data and mismatched parameters. AeronicX introduces the `AeronicxOrchestrator` (`/src/services/dataOrchestrator.ts`), a centralized state-synchronization manager that coordinates physical parameters across the entire platform. 
 * **State Homogeneity**: When a user adjusts meteorological parameters (temperature, wind velocity, wind angle, humidity) or local activity multipliers (traffic flow, industrial boilers, digging rates) within one interface, the change is instantly committed to persistent storage.
 * **Deterministic City Defaults**: It features a built-in library of climate presets, allowing any metropolitan area to seed realistic, region-appropriate baselines instantly.
 * **Reactive Broadcasting**: Utilizes a custom non-blocking event-dispatching pipeline (`aeronicx-data-sync`) that notifies all mounted reactively-listening components, triggering re-renderings and model updates simultaneously without layout thrashing.
@@ -82,7 +82,7 @@ The architecture of AtomOracq is designed for robust performance, precise static
 
 ## 🧮 4. Algorithmic Blueprint & Scientific Models
 
-The scientific credibility of AtomOracq's simulation models relies on four foundational mathematical structures:
+The scientific credibility of AeronicX's simulation models relies on four foundational mathematical structures:
 
 ### A. Simulated Quantum Approximate Optimization Algorithm (QAOA)
 Designed to determine the optimal capital allocation profile across competitive carbon containment programs under a strict municipal budget cap. It models a system Hamiltonian composed of problem and mixer terms, tracking cost convergence through parameterized state rotations ($\gamma, \beta$).
@@ -108,7 +108,7 @@ $$\phi_i = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!
 This mathematical breakdown ensures that policy actions or enforcement penalties issued to a sector are fully backed by auditable causal weights.
 
 ### D. Quantum-Inspired Probability Wave Dispersion
-Instead of modeling pollution using static linear Gaussian plumes, AtomOracq represents local contaminant clouds as discrete probability wave packets propagating across an urban matrix. The waves diffuse interactively according to dynamic wind velocity vectors, temperature-driven thermal currents, and building density blockades:
+Instead of modeling pollution using static linear Gaussian plumes, AeronicX represents local contaminant clouds as discrete probability wave packets propagating across an urban matrix. The waves diffuse interactively according to dynamic wind velocity vectors, temperature-driven thermal currents, and building density blockades:
 
 $$\text{Diffusion Coefficient } (\mathcal{D}) = 0.05 + \left(\frac{\text{Temperature}}{100}\right) \times 0.1$$
 
@@ -120,7 +120,7 @@ $$\text{Concentration } C(x, y, t) = \frac{Q}{4\pi \mathcal{D} t} \exp\left( -\f
 
 ## 🌟 5. Comprehensive Feature Breakdown
 
-Each module in the AtomOracq ecosystem represents a distinct component linked to the centralized sync engine:
+Each module in the AeronicX ecosystem represents a distinct component linked to the centralized sync engine:
 
 ### 📡 A. Environmental Command Center (The Gateway)
 * **Real-Time Data Ingestion**: Pulls real-time air quality telemetry from the Open-Meteo API using coordinate geocoding. 
@@ -230,7 +230,7 @@ npm start
 
 ## 🎨 8. Design Excellence & Interaction Design
 
-Every component in AtomOracq has been designed with strict attention to layout, typography, and interactive tactile feedback:
+Every component in AeronicX has been designed with strict attention to layout, typography, and interactive tactile feedback:
 
 * **The "Deep Cosmic Slate" Aesthetic**: Combines deep, eye-safe midnight backdrops (`#020617`, `#0f172a`) with vibrant cybernetic neon accents. It establishes a clear, high-contrast dashboard structure with generous negative space.
 * **Micro-Animations & Feedback**: Leveraging Framer Motion to provide instant tactile reactions—such as glowing state changes, subtle hover expansions, modal fade-ins, and synchronized loading sweeps.
