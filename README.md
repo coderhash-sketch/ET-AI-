@@ -2,6 +2,8 @@
 
 **AeronicX** is an enterprise-grade full-stack environmental intelligence system and hyperlocal digital twin platform. Engineered to merge real-time metropolitan atmospheric telemetry with Stochastic Quantum Simulations, Game-Theoretic Source Attribution, and Server-Side Explainable AI (XAI), the platform coordinates municipal policy thresholds, predicts hazardous micro-scale particulate surges, and runs quantum-inspired optimization schedules to maximize carbon sequestration and pollution containment.
 
+***Link*** : https://aeronicx-new.vercel.app/
+
 ---
 
 ## 🚀 1. Brief Introduction
