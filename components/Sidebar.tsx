@@ -24,7 +24,11 @@ import {
   Car,
   Lightbulb,
   LayoutDashboard,
-  Bell
+  Bell,
+  Cpu,
+  Radar,
+  ShieldAlert,
+  Sparkles
 } from 'lucide-react';
 import { WorkflowState } from '../types';
 
@@ -35,18 +39,6 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
   const menuItems = [
-    { 
-      id: 'discover', 
-      label: 'Synthesis Hub', 
-      desc: 'Discovery Core',
-      icon: FlaskConical, 
-      state: WorkflowState.CARBON_RESEARCH,
-      active: workflow === WorkflowState.CARBON_RESEARCH,
-      colorClass: 'text-cyan-400',
-      activeBg: 'bg-cyan-400/10',
-      activeBorder: 'border-cyan-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(34,211,238,0.1)]'
-    },
     { 
       id: 'command-center', 
       label: 'Command Center', 
@@ -60,16 +52,28 @@ const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
       glowShadow: 'shadow-[inset_0_0_20px_rgba(16,185,129,0.1)]'
     },
     { 
-      id: 'prediction', 
-      label: 'Hybrid Predict', 
-      desc: 'Quantum-AI Forecast',
-      icon: TrendingUp, 
-      state: WorkflowState.PREDICTION,
-      active: workflow === WorkflowState.PREDICTION,
+      id: 'sky-weave', 
+      label: 'Sky Weave', 
+      desc: 'Unified Prediction',
+      icon: Sparkles, 
+      state: WorkflowState.SKY_WEAVE,
+      active: workflow === WorkflowState.SKY_WEAVE,
       colorClass: 'text-cyan-400',
       activeBg: 'bg-cyan-400/10',
       activeBorder: 'border-cyan-400/20',
       glowShadow: 'shadow-[inset_0_0_20px_rgba(34,211,238,0.1)]'
+    },
+    { 
+      id: 'origin-x', 
+      label: 'Origin - X', 
+      desc: 'Source Attribution',
+      icon: Radar, 
+      state: WorkflowState.ORIGIN_X,
+      active: workflow === WorkflowState.ORIGIN_X,
+      colorClass: 'text-amber-400',
+      activeBg: 'bg-amber-400/10',
+      activeBorder: 'border-amber-400/20',
+      glowShadow: 'shadow-[inset_0_0_20px_rgba(251,191,36,0.1)]'
     },
     { 
       id: 'digital-twin', 
@@ -96,28 +100,40 @@ const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
       glowShadow: 'shadow-[inset_0_0_20px_rgba(192,38,211,0.1)]'
     },
     { 
-      id: 'quantum', 
-      label: 'Quantum Forge', 
-      desc: 'VQE Simulation',
-      icon: Activity, 
-      state: WorkflowState.QUANTUM_SIMULATION,
-      active: workflow === WorkflowState.QUANTUM_SIMULATION,
+      id: 'enforcement-intel', 
+      label: 'VanGuard', 
+      desc: 'Containment Command',
+      icon: ShieldAlert, 
+      state: WorkflowState.ENFORCEMENT_INTEL,
+      active: workflow === WorkflowState.ENFORCEMENT_INTEL,
+      colorClass: 'text-rose-400',
+      activeBg: 'bg-rose-400/10',
+      activeBorder: 'border-rose-400/20',
+      glowShadow: 'shadow-[inset_0_0_20px_rgba(244,63,94,0.15)]'
+    },
+    { 
+      id: 'carbon-capture', 
+      label: 'Catalyst', 
+      desc: 'Sequestration Sinks',
+      icon: Leaf, 
+      state: WorkflowState.CARBON_CAPTURE,
+      active: workflow === WorkflowState.CARBON_CAPTURE,
+      colorClass: 'text-emerald-400',
+      activeBg: 'bg-emerald-400/10',
+      activeBorder: 'border-emerald-400/20',
+      glowShadow: 'shadow-[inset_0_0_20px_rgba(16,185,129,0.15)]'
+    },
+    { 
+      id: 'aethel-q', 
+      label: 'Aethel Q', 
+      desc: 'Quantum Suite',
+      icon: Cpu, 
+      state: WorkflowState.AETHEL_Q,
+      active: workflow === WorkflowState.AETHEL_Q,
       colorClass: 'text-lime-400',
       activeBg: 'bg-lime-400/10',
       activeBorder: 'border-lime-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(163,230,71,0.1)]'
-    },
-    { 
-      id: 'materials', 
-      label: 'Atomic Vault', 
-      desc: 'Molecular Bank',
-      icon: Car, 
-      state: WorkflowState.RESULTS,
-      active: workflow === WorkflowState.RESULTS,
-      colorClass: 'text-orange-400',
-      activeBg: 'bg-orange-400/10',
-      activeBorder: 'border-orange-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(251,146,60,0.1)]'
+      glowShadow: 'shadow-[inset_0_0_20px_rgba(163,230,71,0.15)]'
     },
     { 
       id: 'sustainability', 
@@ -144,28 +160,16 @@ const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
       glowShadow: 'shadow-[inset_0_0_20px_rgba(217,70,239,0.1)]'
     },
     { 
-      id: 'urban-index', 
-      label: 'Urban Index', 
-      desc: 'Global Ranking',
-      icon: Globe, 
-      state: WorkflowState.URBAN_INDEX,
-      active: workflow === WorkflowState.URBAN_INDEX,
-      colorClass: 'text-cyan-400',
-      activeBg: 'bg-cyan-400/10',
-      activeBorder: 'border-cyan-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(34,211,238,0.1)]'
-    },
-    { 
-      id: 'air-story', 
-      label: 'Air Story', 
-      desc: 'Narrative Mode',
-      icon: SolarPanel, 
-      state: WorkflowState.AIR_STORY,
-      active: workflow === WorkflowState.AIR_STORY,
+      id: 'strato-sim', 
+      label: 'Strato Sim', 
+      desc: 'Atmospheric Suite',
+      icon: Fan, 
+      state: WorkflowState.STRATO_SIM,
+      active: workflow === WorkflowState.STRATO_SIM,
       colorClass: 'text-purple-400',
       activeBg: 'bg-purple-400/10',
       activeBorder: 'border-purple-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(168,85,247,0.1)]'
+      glowShadow: 'shadow-[inset_0_0_20px_rgba(168,85,247,0.15)]'
     },
     { 
       id: 'explainable-ai', 
@@ -180,30 +184,6 @@ const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
       glowShadow: 'shadow-[inset_0_0_20px_rgba(34,211,238,0.1)]'
     },
     { 
-      id: 'pollution-journey', 
-      label: 'Journey Sim', 
-      desc: 'Particle Path',
-      icon: Fan, 
-      state: WorkflowState.POLLUTION_JOURNEY,
-      active: workflow === WorkflowState.POLLUTION_JOURNEY,
-      colorClass: 'text-emerald-400',
-      activeBg: 'bg-emerald-400/10',
-      activeBorder: 'border-emerald-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(16,185,129,0.1)]'
-    },
-    { 
-      id: 'climate-network', 
-      label: 'Action Network', 
-      desc: 'Community Impact',
-      icon: Share2, 
-      state: WorkflowState.CLIMATE_NETWORK,
-      active: workflow === WorkflowState.CLIMATE_NETWORK,
-      colorClass: 'text-lime-400',
-      activeBg: 'bg-lime-400/10',
-      activeBorder: 'border-lime-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(163,230,71,0.1)]'
-    },
-    { 
       id: 'scenario-lab', 
       label: 'Scenario Lab', 
       desc: 'Reduction Sim',
@@ -214,18 +194,6 @@ const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
       activeBg: 'bg-cyan-400/10',
       activeBorder: 'border-cyan-400/20',
       glowShadow: 'shadow-[inset_0_0_20px_rgba(34,211,238,0.1)]'
-    },
-    { 
-      id: 'quantum-optimization', 
-      label: 'Quantum Engine', 
-      desc: 'Optimization Core',
-      icon: Zap, 
-      state: WorkflowState.QUANTUM_OPTIMIZATION,
-      active: workflow === WorkflowState.QUANTUM_OPTIMIZATION,
-      colorClass: 'text-lime-400',
-      activeBg: 'bg-lime-400/10',
-      activeBorder: 'border-lime-400/20',
-      glowShadow: 'shadow-[inset_0_0_20px_rgba(163,230,71,0.1)]'
     },
     { 
       id: 'decision-engine', 
@@ -250,7 +218,7 @@ const Sidebar: React.FC<SidebarProps> = ({ workflow, setWorkflow }) => {
       activeBg: 'bg-magenta-400/10',
       activeBorder: 'border-magenta-400/20',
       glowShadow: 'shadow-[inset_0_0_20px_rgba(217,70,239,0.1)]'
-    },
+    }
   ];
 
   const handleMenuClick = (state: WorkflowState) => {

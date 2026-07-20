@@ -604,12 +604,12 @@ export const EnvironmentalCommandCenter: React.FC<ECCProps> = ({ setWorkflow, ad
 
         <button
           onClick={() => {
-            setWorkflow(WorkflowState.PREDICTION);
-            addLog("Transitioned to Hyperlocal Predictive Grid Map & Calendar", "success");
+            setWorkflow(WorkflowState.SKY_WEAVE);
+            addLog("Transitioned to Sky Weave Hyperlocal AQI Forecast Suite", "success");
           }}
           className="relative z-10 shrink-0 px-6 py-4 bg-gradient-to-r from-cyan-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:shadow-[0_0_40px_rgba(34,211,238,0.55)] transition-all cursor-pointer flex items-center gap-2 group border border-white/20"
         >
-          Open Predictive Map & Calendar
+          Open Sky Weave Forecast Suite
           <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </button>
       </div>
@@ -832,12 +832,12 @@ export const EnvironmentalCommandCenter: React.FC<ECCProps> = ({ setWorkflow, ad
             </div>
 
             <button 
-              onClick={() => setWorkflow(WorkflowState.PREDICTION)}
+              onClick={() => setWorkflow(WorkflowState.SKY_WEAVE)}
               className="mt-4 flex items-center justify-between w-full px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-black text-white cursor-pointer transition-colors"
             >
               <span className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-cyan-400" />
-                Explore Hybrid Prediction Dashboard (Module 1)
+                Explore Sky Weave Forecast Suite (Module 1)
               </span>
               <ArrowRight className="w-4 h-4 text-slate-500" />
             </button>
@@ -1172,9 +1172,9 @@ export const EnvironmentalCommandCenter: React.FC<ECCProps> = ({ setWorkflow, ad
               )}
             </button>
             <button 
-              onClick={() => setWorkflow(WorkflowState.QUANTUM_OPTIMIZATION)}
+              onClick={() => setWorkflow(WorkflowState.AETHEL_Q)}
               className="p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-2xl cursor-pointer transition-colors"
-              title="Quantum Engine Suite"
+              title="Aethel Q Suite"
             >
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </button>
@@ -1223,14 +1223,6 @@ export const EnvironmentalCommandCenter: React.FC<ECCProps> = ({ setWorkflow, ad
                     </div>
                   </div>
                 </div>
-
-                <button 
-                  onClick={() => setWorkflow(WorkflowState.CARBON_RESEARCH)}
-                  className="mt-4 flex items-center justify-between w-full px-3 py-2 bg-slate-950 hover:bg-slate-900 border border-slate-800 rounded-xl text-[11px] font-bold text-cyan-400 cursor-pointer transition-colors"
-                >
-                  <span>Go to GNN Synthesis Hub</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
 
               {/* Graphical representation of the Climate Knowledge Graph */}

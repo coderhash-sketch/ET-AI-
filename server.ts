@@ -5,6 +5,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
 import { CITIES, getRealisticAqi } from './constants';
+import { calculateHyperlocalGrid, getCellForecastTimeline } from './src/services/airsightPredictionService';
+import { calculateGeospatialAttribution } from './src/services/originXService';
+import { getEnforcementIntelligence } from './src/services/enforcementService';
+import { getCarbonCaptureRecommendations } from './src/services/carbonCaptureService';
 
 const __filename = typeof import.meta !== 'undefined' && import.meta?.url ? fileURLToPath(import.meta.url) : '';
 const __dirname = __filename ? path.dirname(__filename) : '';
@@ -164,6 +168,80 @@ async function startServer() {
       reductionPercentage: reductionFactor * 100,
       timeToImpact: "3-6 months"
     });
+  });
+
+  // --- Hyperlocal AQI Forecast (AirSight AI) APIs ---
+  app.get('/api/airsight-forecast', (req, res) => {
+    try {
+      const city = (req.query.city as string) || 'New Delhi';
+      const period = (req.query.period as any) || '1 Hour';
+      
+      const temp = req.query.temperature ? parseFloat(req.query.temperature as string) : undefined;
+      const hum = req.query.humidity ? parseFloat(req.query.humidity as string) : undefined;
+      const windSpd = req.query.windSpeed ? parseFloat(req.query.windSpeed as string) : undefined;
+      const windDir = (req.query.windDirection as string) || undefined;
+
+      const result = calculateHyperlocalGrid(city, period, {
+        temperature: temp,
+        humidity: hum,
+        windSpeed: windSpd,
+        windDirection: windDir
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error in /api/airsight-forecast:", error);
+      res.status(500).json({ error: 'Failed to calculate hyperlocal AQI forecast grid', message: error.message });
+    }
+  });
+
+  app.get('/api/airsight-cell-timeline', (req, res) => {
+    try {
+      const city = (req.query.city as string) || 'New Delhi';
+      const cellId = (req.query.cellId as string);
+      const baseCellAqi = req.query.baseCellAqi ? parseInt(req.query.baseCellAqi as string) : 100;
+
+      if (!cellId) {
+        return res.status(400).json({ error: 'cellId parameter is required' });
+      }
+
+      const timeline = getCellForecastTimeline(city, cellId, baseCellAqi);
+      res.json({ cellId, timeline });
+    } catch (error: any) {
+      console.error("Error in /api/airsight-cell-timeline:", error);
+      res.status(500).json({ error: 'Failed to generate cell forecast timeline', message: error.message });
+    }
+  });
+
+  app.get('/api/origin-x-attribution', (req, res) => {
+    try {
+      const city = (req.query.city as string) || 'New Delhi';
+      const period = (req.query.period as any) || '1 Hour';
+      
+      const temp = req.query.temperature ? parseFloat(req.query.temperature as string) : undefined;
+      const hum = req.query.humidity ? parseFloat(req.query.humidity as string) : undefined;
+      const windSpd = req.query.windSpeed ? parseFloat(req.query.windSpeed as string) : undefined;
+      const windDir = (req.query.windDirection as string) || undefined;
+
+      const trafficVol = req.query.trafficVolumeMultiplier ? parseFloat(req.query.trafficVolumeMultiplier as string) : undefined;
+      const industrialOut = req.query.industrialOutputMultiplier ? parseFloat(req.query.industrialOutputMultiplier as string) : undefined;
+      const constructionAct = req.query.constructionActivityLevel ? parseFloat(req.query.constructionActivityLevel as string) : undefined;
+
+      const result = calculateGeospatialAttribution(city, period, {
+        temperature: temp,
+        humidity: hum,
+        windSpeed: windSpd,
+        windDirection: windDir,
+        trafficVolumeMultiplier: trafficVol,
+        industrialOutputMultiplier: industrialOut,
+        constructionActivityLevel: constructionAct
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error in /api/origin-x-attribution:", error);
+      res.status(500).json({ error: 'Failed to calculate geospatial pollution source attribution', message: error.message });
+    }
   });
 
   // Cache for Live AQI
@@ -665,6 +743,291 @@ Keep your response extremely polished, formatted beautifully in Markdown with bo
 - **Recommended Action**: Deploy high-density vertical greenbelts and autonomous electric transit corridors.
 - **Est. Impact**: -30% overall carbon and PM2.5 concentration within 180 days.`,
         isSimulated: true
+      });
+    }
+  });
+
+  // Helper function for Enforcement Protocol fallback
+  function getEnforcementFallback(payload: any) {
+    const { city, cellId, cellName, cellType, aqiValue, primarySource, contributions, environmentalConditions } = payload;
+    const windDir = environmentalConditions?.windDirection || 'N';
+    const windSpd = environmentalConditions?.windSpeed || 10;
+    
+    let code = `SKY-VEC-MCD-${city?.substring(0, 3).toUpperCase() || 'GEN'}-${cellId || 'X1'}`;
+    let mandate = '';
+    let reduction = '-28%';
+    let dispersion = '';
+
+    if (primarySource === 'Traffic' || (contributions?.traffic || 0) > 40) {
+      mandate = `- **Immediate Traffic Routing Diversion**: Auto-divert all heavy freight and diesel cargo transport vehicles away from ${cellName} utilizing active digital roadside transponders.
+- **Congestion Charge Multiplier**: Enable temporary 2.5x micro-congestion charges on the transit lanes of ${cellName}.
+- **Urban Micro-Filtration Units**: Initiate localized exhaust-scrubbing electrostatic carbon-capture modules along highway medians.`;
+      reduction = '-34%';
+      dispersion = `Plume is dispersing at ${windSpd} km/h towards ${windDir}. Downwind residential sectors must activate indoor HEPA filtration barriers immediately.`;
+    } else if (primarySource === 'Industrial Emissions' || (contributions?.industrial || 0) > 40) {
+      mandate = `- **Emission Cap Enforcement**: Trigger immediate telemetry-driven 40% emission cap curtailment on the point-source chimneys within ${cellName}.
+- **Filtration Scrubber Override**: Enforce secondary alkaline-spray wet scrubbers on high-pressure sulfur dioxide outlets.
+- **Dynamic Workload Shifting**: Order industrial facilities to shift heavy thermal kilns and high-emission processes to overnight high-dispersion windows.`;
+      reduction = '-42%';
+      dispersion = `Plume concentrations are expected to drift downwind of the industrial sector. Low wind speed of ${windSpd} km/h indicates high ground-level concentration, requiring immediate localized emission suppression.`;
+    } else if (primarySource === 'Construction' || (contributions?.construction || 0) > 40) {
+      mandate = `- **Halt Dry-Excavation**: Enforce immediate temporary stoppage of dry concrete pulverization, drilling, and sorting operations.
+- **Aqueous Cloud Seeding & Spraying**: Initiate automatic water-mist aerosol suppression cannons from mobile site-boundary rigs.
+- **Silicate Stabilization**: Order immediate application of biopolymer dust suppressants to exposed topsoil mounds and excavation pits.`;
+      reduction = '-38%';
+      dispersion = `Heavy construction dust particulates of PM10 size are highly localized due to low wind speed of ${windSpd} km/h, meaning active suppression will achieve maximum efficiency within the direct cell perimeter.`;
+    } else if (primarySource === 'Waste Burning' || (contributions?.wasteBurning || 0) > 20) {
+      mandate = `- **Autonomous Infrared Patrol**: Dispatch municipal thermal-imaging aerial drones to scan open refuse sites and locate unauthorized organic burning.
+- **Refuse Containment Strike**: Deploy automated water-gel foam suppression directly onto active combustion heaps.
+- **Local Biomass Penalty Grid**: Initiate high-density environmental policing patrol sweeps to penalize open crop residue or trash combustion.`;
+      reduction = '-30%';
+      dispersion = `Thermal combustion plume is rising and will be carried downwind. Local containment protocols must be established within a 2.5km radial arc of ${cellName}.`;
+    } else {
+      mandate = `- **Aerosol Particle Pre-precipitation**: Activate street-level ionic dust-settling grids to settle ambient fine particulate matter.
+- **Municipal Transport Subsidies**: Render public electric shuttle transits free within ${city} to drop ambient mobile background emissions.
+- **Active Green Corridor Sprinklers**: Activate smart canopy moisture-misting grids to wash down suspended atmospheric dust.`;
+      reduction = '-22%';
+      dispersion = `Background stagnation is highly stable. Wind velocity of ${windSpd} km/h is insufficient to naturally purge the basin, requiring localized mechanical purification.`;
+    }
+
+    return `### 🛡️ **MUNICIPAL CONTAINMENT & ENFORCEMENT PROTOCOL**
+**PROTOCOL CODE**: \`${code}\`
+**TARGET SECTOR**: \`${cellName || 'Unspecified Sector'}\` (AQI: ${aqiValue || 120})
+
+#### 1. COMMAND MANDATES (IMMEDIATE ACTION)
+${mandate}
+
+#### 2. DISPERSION METEOROLOGICAL VECTOR
+- **Analysis**: Wind speed is **${windSpd} km/h** from **${windDir}**. ${dispersion}
+- **Projected Concentration Reduction**: **${reduction}** within **6 Hours** of active protocol deployment.`;
+  }
+
+  // 6. Enforcement Integration Agent API using Gemini
+  app.post('/api/origin-x-enforcement', async (req, res) => {
+    try {
+      const { city, cellId, cellName, cellType, aqiValue, primarySource, contributions, environmentalConditions } = req.body;
+      
+      const apiKey = process.env.GEMINI_API_KEY;
+      const isValidFormat = typeof apiKey === 'string' && 
+                            apiKey.trim() !== '' && 
+                            apiKey !== 'undefined' && 
+                            !apiKey.includes('YOUR_API_KEY') && 
+                            /^AIzaSy[A-Za-z0-9_-]{30,}$/.test(apiKey.trim());
+
+      if (!isValidFormat) {
+        const fallback = getEnforcementFallback(req.body);
+        return res.json({
+          protocol: fallback,
+          isSimulated: true,
+          notice: "Gemini API key is invalid or missing. Utilizing localized simulation fallback."
+        });
+      }
+
+      // Lazy load Gemini client
+      const ai = new GoogleGenAI({
+        apiKey: apiKey,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          }
+        }
+      });
+
+      const prompt = `You are the Sky Vector Enforcement Integration AI Agent (Sprint 3 Municipal Enforcement Division).
+A local particulate matter (PM) and air quality index (AQI) breach has been detected in the following sector:
+- Sector: ${cellName || 'Unknown Sector'} (ID: ${cellId || 'X1'})
+- City: ${city || 'New Delhi'}
+- Sector Type: ${cellType || 'residential'}
+- Measured AQI: ${aqiValue || 100}
+- Primary Source of Pollution: ${primarySource || 'Background Pollution'}
+- Source Contributions Breakdown: 
+  * Traffic/Vehicular Exhaust: ${contributions?.traffic || 20}%
+  * Construction & Excavation Dust: ${contributions?.construction || 20}%
+  * Industrial Emissions: ${contributions?.industrial || 20}%
+  * Waste Burning/Refuse Incineration: ${contributions?.wasteBurning || 20}%
+  * Background Regional Pollution: ${contributions?.background || 20}%
+- Local Meteorological Context:
+  * Temperature: ${environmentalConditions?.temperature || 24}°C
+  * Humidity: ${environmentalConditions?.humidity || 50}%
+  * Wind: ${environmentalConditions?.windSpeed || 10} km/h ${environmentalConditions?.windDirection || 'N'}
+
+Generate a formal, high-impact, futuristic "MUNICIPAL CONTAINMENT & ENFORCEMENT PROTOCOL" to address this breach.
+Include:
+1. PROTOCOL CODE: Generate a sci-fi/military-sounding protocol ID (e.g. SKY-VECTOR-CONTAIN-DEL-A1).
+2. CONTAINMENT MANDATE: Specific immediate emergency enforcement orders tailored to the dominant pollution source and sector type in bullet points.
+   - If Traffic is dominant: automated traffic diversion, heavy diesel ban, or autonomous drone filtration deployment.
+   - If Construction is dominant: halt construction work, wet-suppression spray drone activation, or dry-mist curtains.
+   - If Industrial is dominant: enforce immediate stack emissions cap, power-down heavy kilns, or divert to standby filtration.
+   - If Waste Burning is dominant: deploy localized fire-suppression drones, deploy thermal infrared scanning sweeps, and enforce waste diversion.
+3. EST. CONCENTRATION REDUCTION: Specify a realistic percentage (e.g., -35% within 12 hours).
+4. METEOROLOGICAL VECTORS: How wind speed (${environmentalConditions?.windSpeed || 10} km/h from ${environmentalConditions?.windDirection || 'N'}) will disperse or trap the plume, and how the enforcement agent must adapt.
+
+Format the response in beautiful, clean Markdown with distinct sections. Do not write conversational filler or meta-commentary, just the protocol directly. Keep it highly authoritative, technical, and polished, between 200-250 words.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+      });
+
+      res.json({
+        protocol: response.text?.trim() || "Unable to retrieve protocol.",
+        isSimulated: false
+      });
+
+    } catch (error: any) {
+      console.warn("Gemini Enforcement Agent fallback used:", error.message);
+      const fallback = getEnforcementFallback(req.body);
+      res.json({
+        protocol: fallback,
+        isSimulated: true
+      });
+    }
+  });
+
+  // 7. Enforcement Intelligence Agent API
+  app.post('/api/enforcement-intel', (req, res) => {
+    try {
+      const { city, forecastPeriod, envParams } = req.body;
+      
+      // Validation
+      if (!city) {
+        return res.status(400).json({ error: "City is required." });
+      }
+      
+      const period = forecastPeriod || '24 Hour';
+      const result = getEnforcementIntelligence(city, period, envParams);
+      return res.json(result);
+    } catch (error: any) {
+      console.error("Enforcement Intelligence API Error:", error);
+      return res.status(500).json({ error: error.message || "Failed to generate enforcement intelligence." });
+    }
+  });
+
+  // 7.1. Vanguard AI Enforcement Intelligence Deep Refinement API using Gemini
+  app.post('/api/vanguard-ai-analysis', async (req, res) => {
+    const { recommendation } = req.body;
+    
+    if (!recommendation) {
+      return res.status(400).json({ error: "Recommendation payload is required." });
+    }
+
+    try {
+      const apiKey = process.env.GEMINI_API_KEY;
+      const isValidFormat = typeof apiKey === 'string' && 
+                            apiKey.trim() !== '' && 
+                            apiKey !== 'undefined' && 
+                            !apiKey.includes('YOUR_API_KEY') && 
+                            /^AIzaSy[A-Za-z0-9_-]{30,}$/.test(apiKey.trim());
+
+      if (!isValidFormat) {
+        // Safe mock fallback mimicking beautiful AI structured output
+        return res.json({
+          priority: recommendation.priority || "High",
+          suggestedAction: recommendation.suggestedAction || "Inspect Industry",
+          evidenceSummary: `[SIMULATION FALLBACK] Localized air quality in ${recommendation.cellName} has registered a severe AQI of ${recommendation.aqiValue} (${recommendation.aqiCategory || 'Unhealthy'}) with a ${recommendation.historicalTrend?.toLowerCase() || 'stable'} trend. High upwind vector dynamics (wind blowing from ${recommendation.windDirection || 'NE'}) indicate active plume dispersion downwind of local emissions, sourced with ${recommendation.sourceConfidence || 85}% attribution confidence to ${recommendation.primarySource}. Immediate dispatched site enforcement under protocol VGD-${recommendation.id?.toUpperCase() || 'REFINE'} is required.`,
+          estimatedImprovement: recommendation.estimatedImprovement || "15–25 AQI points reduction within 12 hours",
+          recommendationConfidence: recommendation.recommendationConfidence || 88,
+          isSimulated: true
+        });
+      }
+
+      // Lazy load Gemini client
+      const ai = new GoogleGenAI({
+        apiKey: apiKey,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          }
+        }
+      });
+
+      const prompt = `You are VANGUARD, the AI Enforcement Intelligence Engine of AeronicX.
+Your purpose is to convert raw pollution intelligence and source attribution telemetry into highly actionable and binding municipal decisions.
+
+Analyse these inputs:
+- Sector/Inspection Zone: ${recommendation.cellName} (Type: ${recommendation.cellType})
+- Forecast AQI: ${recommendation.aqiValue} (${recommendation.aqiCategory || 'Unhealthy'})
+- Primary Pollution Source: ${recommendation.primarySource}
+- Attribution Confidence: ${recommendation.sourceConfidence}%
+- Historical Trend: ${recommendation.historicalTrend}
+- Meteorological Context: Wind is blowing at ${recommendation.windSpeed || 14} km/h from ${recommendation.windDirection || 'NE'}
+
+Generate an enforcement decision output with the following specifications:
+1. Priority Level: Classify the risk urgency. Must be exactly one of: "Critical", "High", "Medium", "Low".
+2. Recommended Action: Select the most appropriate tactical order. Must be exactly one of the following concrete actions:
+   - "Inspect Construction Site"
+   - "Inspect Industry"
+   - "Increase Monitoring"
+   - "Deploy Mobile Sensor"
+   - "Verify Waste Burning"
+3. Evidence Summary: A comprehensive, authoritative, professional 2-3 sentence paragraph explaining the scientific breach, the wind-vector plume dispersal risks from ${recommendation.windDirection || 'NE'} to downwind areas, why this action is selected, and why the source attribution is highly reliable.
+4. Estimated AQI Improvement: A realistic, quantified air-quality improvement string (e.g., "18–24 AQI points reduction within 12 hours" or "10–15 AQI points within 24 hours").
+5. Recommendation Confidence: A percentage score between 60 and 99 reflecting decision confidence based on telemetry reliability and meteorological volatility.
+
+Do NOT perform carbon capture optimisation. Keep your domain strictly to municipal enforcement and containment decisions.
+
+Return your complete response in JSON format. Do not include markdown code block characters like \`\`\`json or trailing whitespace outside the JSON. The JSON keys must be exactly:
+{
+  "priority": string,
+  "suggestedAction": string,
+  "evidenceSummary": string,
+  "estimatedImprovement": string,
+  "recommendationConfidence": number
+}`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json"
+        }
+      });
+
+      const text = response.text?.trim() || "{}";
+      const cleanedJsonText = text.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+      const parsed = JSON.parse(cleanedJsonText);
+
+      res.json({
+        priority: parsed.priority || recommendation.priority || "High",
+        suggestedAction: parsed.suggestedAction || recommendation.suggestedAction || "Inspect Industry",
+        evidenceSummary: parsed.evidenceSummary || recommendation.evidenceSummary,
+        estimatedImprovement: parsed.estimatedImprovement || recommendation.estimatedImprovement,
+        recommendationConfidence: parsed.recommendationConfidence || recommendation.recommendationConfidence,
+        isSimulated: false
+      });
+
+    } catch (error: any) {
+      console.warn("Vanguard AI Refinement Endpoint Error, fallback used:", error.message);
+      res.json({
+        priority: recommendation.priority || "High",
+        suggestedAction: recommendation.suggestedAction || "Inspect Industry",
+        evidenceSummary: `Localized air quality in ${recommendation.cellName} has reached ${recommendation.aqiValue} AQI, driven by ${recommendation.primarySource}. Wind vectors from ${recommendation.windDirection || 'NE'} are spreading emissions downwind. Verification indicates ${recommendation.sourceConfidence}% attribution certainty. Deploying containment protocol will lower localized AQI.`,
+        estimatedImprovement: recommendation.estimatedImprovement || "15–20 AQI points within 24 hours",
+        recommendationConfidence: recommendation.recommendationConfidence || 85,
+        isSimulated: true,
+        error: error.message
+      });
+    }
+  });
+
+  // 8. Carbon Capture Intelligence Agent API
+  app.post('/api/carbon-capture', (req, res) => {
+    try {
+      const { city, forecastPeriod, envParams } = req.body;
+
+      // Validation
+      if (!city) {
+        return res.status(400).json({ error: "City parameter is required to generate carbon capture strategies." });
+      }
+
+      const period = forecastPeriod || '24 Hour';
+      const result = getCarbonCaptureRecommendations(city, period, envParams);
+      return res.json(result);
+    } catch (error: any) {
+      console.error("Carbon Capture Intelligence API Error:", error);
+      return res.status(500).json({
+        error: "Failed to generate carbon capture intelligence recommendations.",
+        message: error.message || "Internal server error"
       });
     }
   });

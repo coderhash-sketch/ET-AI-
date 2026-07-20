@@ -27,28 +27,25 @@ import {
 } from 'lucide-react';
 import { WorkflowState, SimulationLog, MaterialCandidate } from './types';
 import Sidebar from './components/Sidebar';
-import MoleculeViewer from './components/MoleculeViewer';
 import AIFilteringEngine from './components/AIFilteringEngine';
-import QuantumSimulator from './components/QuantumSimulator';
-import ResultsDashboard from './components/ResultsDashboard';
+import AethelQ from './components/AethelQ';
 import TechnicalModal from './components/TechnicalModal';
 import LabConfig from './components/LabConfig';
 import LogHistory from './components/LogHistory';
 import SDGModal from './components/SDGModal';
 import MyClimateImpact from './components/MyClimateImpact';
 import GreenCityAdvisor from './components/GreenCityAdvisor';
-import UrbanSustainabilityIndex from './components/UrbanSustainabilityIndex';
-import AirStoryMode from './components/AirStoryMode';
+import StratoSim from './components/StratoSim';
 import ExplainableAIPanel from './components/ExplainableAIPanel';
-import PollutionJourneySimulator from './components/PollutionJourneySimulator';
-import ClimateActionNetwork from './components/ClimateActionNetwork';
 import CleanAirScenarioLab from './components/CleanAirScenarioLab';
-import QuantumOptimizationEngine from './components/QuantumOptimizationEngine';
-import PredictionDashboard from './components/PredictionDashboard';
 import QuantumDecisionEngine from './components/QuantumDecisionEngine';
 import DigitalTwinEngine from './components/DigitalTwinEngine';
 import { CitizenAdvisoryCenter } from './components/CitizenAdvisoryCenter';
 import { EnvironmentalCommandCenter } from './components/EnvironmentalCommandCenter';
+import OriginX from './components/OriginX';
+import VanGuard from './components/VanGuard';
+import { CarbonCaptureIntelligence } from './components/CarbonCaptureIntelligence';
+import SkyWeave from './components/SkyWeave';
 
 const DISCOVERY_DATABASE: MaterialCandidate[] = [
   {
@@ -258,6 +255,7 @@ const App: React.FC = () => {
   const [showSDGModal, setShowSDGModal] = useState(false);
   const [logs, setLogs] = useState<SimulationLog[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialCandidate>(DISCOVERY_DATABASE[0]);
+  const [activeEnforcementInput, setActiveEnforcementInput] = useState<any | null>(null);
 
   const addLog = (message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info') => {
     setLogs(prev => [{
@@ -291,57 +289,27 @@ const App: React.FC = () => {
     };
   }, []);
 
-  const initiateDiscovery = () => {
-    setWorkflow(WorkflowState.AI_FILTERING);
-    addLog("Initiating discovery pipeline...", "info");
-    addLog("Loading Material Genome Database (1.2M entries)", "info");
-    
-    setTimeout(() => {
-      setWorkflow(WorkflowState.QUANTUM_SIMULATION);
-      addLog("AI Filtering complete: Top 100 candidates selected", "success");
-    }, 3500);
-
-    setTimeout(() => {
-      setWorkflow(WorkflowState.RESULTS);
-      addLog("Quantum simulation converged for all 5 target clusters", "success");
-      addLog("Found 5 viable materials. Exploring X1...", "success");
-    }, 8000);
-  };
-
-  const resetPipeline = () => {
-    setWorkflow(WorkflowState.CARBON_RESEARCH);
-    setLogs([]);
-    setSelectedMaterial(DISCOVERY_DATABASE[0]);
-  };
-
-  const handleMaterialSelect = (material: MaterialCandidate) => {
-    setSelectedMaterial(material);
-    addLog(`Accessing atomic logs for ${material.name}...`, "info");
-    addLog(`VQE Converged: -12.45 Hartree affinity for ${material.metal} node`, "success");
-  };
-
   const getStatusLabel = (state: WorkflowState) => {
     switch (state) {
       case WorkflowState.IDLE: return { text: "COMMAND CENTER LIVE", color: "text-emerald-400 font-bold" };
-      case WorkflowState.CARBON_RESEARCH: return { text: "QUANTUM SYNTHESIS STANDBY", color: "text-cyan-400" };
+      case WorkflowState.AIRSIGHT_AI: return { text: "SKY VECTOR HYPERLOCAL ENGINE", color: "text-cyan-400 font-bold" };
+      case WorkflowState.ORIGIN_X: return { text: "ORIGIN-X SOURCE ATTRIBUTION ENGINE", color: "text-amber-400 font-bold" };
       case WorkflowState.AI_FILTERING: return { text: "NEURAL GNN SCREENING...", color: "text-magenta-400" };
-      case WorkflowState.QUANTUM_SIMULATION: return { text: "VQE COHERENCE OPTIMIZATION", color: "text-cyan-400" };
-      case WorkflowState.RESULTS: return { text: `VIEWING ${selectedMaterial.id} - ${selectedMaterial.name}`, color: "text-lime-400" };
+      case WorkflowState.AETHEL_Q: return { text: "AETHEL QUANTUM SUITE", color: "text-lime-400" };
       case WorkflowState.CONFIG: return { text: "INFRASTRUCTURE OPTIMIZATION", color: "text-cyan-400" };
       case WorkflowState.LOGS: return { text: "HISTORICAL EXPERIMENT ARCHIVE", color: "text-magenta-400" };
       case WorkflowState.SUSTAINABILITY: return { text: "PERSONAL FOOTPRINT ANALYTICS", color: "text-blue-400" };
       case WorkflowState.CITY_ADVISOR: return { text: "URBAN INTERVENTION PLANNER", color: "text-magenta-500" };
-      case WorkflowState.URBAN_INDEX: return { text: "GLOBAL SUSTAINABILITY RANKING", color: "text-cyan-400" };
-      case WorkflowState.AIR_STORY: return { text: "ATMOSPHERIC NARRATIVE MODE", color: "text-purple-400" };
+      case WorkflowState.STRATO_SIM: return { text: "STRATO ATMOSPHERIC SUITE", color: "text-purple-400" };
       case WorkflowState.EXPLAINABLE_AI: return { text: "NEURAL PREDICTION EXPLAINER", color: "text-cyan-400" };
-      case WorkflowState.POLLUTION_JOURNEY: return { text: "PARTICLE TRAJECTORY SIMULATOR", color: "text-emerald-400" };
-      case WorkflowState.CLIMATE_NETWORK: return { text: "COMMUNITY IMPACT NETWORK", color: "text-lime-400" };
       case WorkflowState.SCENARIO_LAB: return { text: "CLEAN AIR SCENARIO LAB", color: "text-cyan-400" };
-      case WorkflowState.QUANTUM_OPTIMIZATION: return { text: "QUANTUM OPTIMIZATION ENGINE", color: "text-cyan-400" };
       case WorkflowState.PREDICTION: return { text: "HYBRID QUANTUM-AI FORECASTING", color: "text-cyan-400" };
       case WorkflowState.DECISION_ENGINE: return { text: "QUANTUM STRATEGY OPTIMIZATION", color: "text-emerald-400" };
       case WorkflowState.DIGITAL_TWIN: return { text: "CLIMATE DIGITAL TWIN ENGINE", color: "text-cyan-400" };
       case WorkflowState.CITIZEN_ADVISORY: return { text: "CITIZEN ADVISORY INTELLIGENCE", color: "text-magenta-400" };
+      case WorkflowState.ENFORCEMENT_INTEL: return { text: "VANGUARD TACTICAL COMMAND", color: "text-rose-400" };
+      case WorkflowState.CARBON_CAPTURE: return { text: "CATALYST SEQUESTRATION SINKS", color: "text-emerald-400" };
+      case WorkflowState.SKY_WEAVE: return { text: "SKY WEAVE PREDICTION SUITE", color: "text-cyan-400" };
       default: return { text: "SYSTEM ACTIVE", color: "text-slate-400" };
     }
   };
@@ -411,88 +379,32 @@ const App: React.FC = () => {
             <EnvironmentalCommandCenter setWorkflow={setWorkflow} addLog={addLog} />
           )}
 
-          {workflow === WorkflowState.CARBON_RESEARCH && (
-            <div className="flex-1 flex flex-col items-center justify-center space-y-10 animate-in fade-in zoom-in duration-700">
-              <div className="relative">
-                <div className="absolute inset-0 bg-cyan-500 blur-[100px] opacity-20 rounded-full animate-pulse"></div>
-                <Atom className="w-48 h-48 text-cyan-400 relative z-10 animate-float" />
-              </div>
-              <div className="text-center space-y-6 max-w-3xl">
-                <h2 className="text-7xl font-black tracking-tighter leading-tight">
-                  <span className="neonic-green-red">Accelerate</span> <br />
-                  <span className="neonic-text">Carbon Capture</span> <br />
-                  <span className="neonic-discovery">Discovery</span>
-                </h2>
-                <p className={`${isDarkMode ? 'text-slate-500' : 'text-slate-600'} text-xl font-medium px-12`}>
-                  Harnessing AI-driven Neural Sifting and VQE Quantum Simulation to architect the next evolution of CO₂-adsorbing materials.
-                </p>
-              </div>
-              <button 
-                onClick={initiateDiscovery}
-                className="group relative px-14 py-6 bg-gradient-to-br from-slate-200 via-white to-lime-200 text-slate-900 rounded-3xl font-black text-2xl overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(163,230,71,0.5)] border border-lime-400/30 shadow-[0_0_25px_rgba(163,230,71,0.2)]"
-              >
-                <div className="flex items-center gap-4 relative z-10">
-                  Initiate Lab Discovery <ChevronRight className="w-8 h-8 transition-transform group-hover:translate-x-2" />
-                </div>
-                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity blur-2xl"></div>
-              </button>
-            </div>
-          )}
-
+          {workflow === WorkflowState.SKY_WEAVE && <SkyWeave />}
+          {workflow === WorkflowState.ORIGIN_X && <OriginX setWorkflow={setWorkflow} />}
           {workflow === WorkflowState.AI_FILTERING && <AIFilteringEngine />}
-          {workflow === WorkflowState.QUANTUM_SIMULATION && <QuantumSimulator selectedMaterial={selectedMaterial} />}
-          {workflow === WorkflowState.RESULTS && (
-            <div className="flex-1 flex flex-col gap-8 animate-in slide-in-from-bottom-12 duration-1000">
-              <div className="flex justify-between items-end border-b border-slate-200 dark:border-slate-800 pb-8">
-                <div>
-                  <h2 className={`text-5xl font-black ${isDarkMode ? 'text-white' : 'text-slate-900'} tracking-tighter mb-2`}>Discovery Archive</h2>
-                  <p className={`${isDarkMode ? 'text-slate-500' : 'text-slate-600'} text-lg font-medium`}>Quantum simulation has confirmed <span className="text-lime-400 font-bold">5 materials</span> with negative binding energy.</p>
-                </div>
-                <button 
-                  onClick={resetPipeline}
-                  className={`flex items-center gap-3 px-6 py-3 text-sm font-bold ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'} hover:opacity-80 rounded-2xl transition-all border border-slate-200 dark:border-slate-800`}
-                >
-                  <RefreshCcw className="w-5 h-5" /> Reboot Pipeline
-                </button>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <div className="lg:col-span-8">
-                  <MoleculeViewer 
-                    showBinding={true} 
-                    metalSymbol={selectedMaterial.metal}
-                    metalColor={selectedMaterial.metalColor}
-                    materialName={selectedMaterial.name}
-                    entryX={selectedMaterial.entryX}
-                    entryY={selectedMaterial.entryY}
-                    entryRotation={selectedMaterial.entryRotation}
-                    velocity={selectedMaterial.velocity}
-                  />
-                </div>
-                <div className="lg:col-span-4">
-                  <ResultsDashboard 
-                    selectedMaterial={selectedMaterial} 
-                    materials={DISCOVERY_DATABASE}
-                    onSelect={handleMaterialSelect}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+          {workflow === WorkflowState.AETHEL_Q && <AethelQ selectedMaterial={selectedMaterial} />}
           {workflow === WorkflowState.CONFIG && <LabConfig />}
           {workflow === WorkflowState.LOGS && <LogHistory />}
           {workflow === WorkflowState.SUSTAINABILITY && <MyClimateImpact />}
           {workflow === WorkflowState.CITY_ADVISOR && <GreenCityAdvisor />}
-          {workflow === WorkflowState.URBAN_INDEX && <UrbanSustainabilityIndex />}
-          {workflow === WorkflowState.AIR_STORY && <AirStoryMode />}
+          {workflow === WorkflowState.STRATO_SIM && <StratoSim />}
           {workflow === WorkflowState.EXPLAINABLE_AI && <ExplainableAIPanel />}
-          {workflow === WorkflowState.POLLUTION_JOURNEY && <PollutionJourneySimulator />}
-          {workflow === WorkflowState.CLIMATE_NETWORK && <ClimateActionNetwork />}
           {workflow === WorkflowState.SCENARIO_LAB && <CleanAirScenarioLab setWorkflow={setWorkflow} />}
-          {workflow === WorkflowState.QUANTUM_OPTIMIZATION && <QuantumOptimizationEngine />}
-          {workflow === WorkflowState.PREDICTION && <PredictionDashboard />}
           {workflow === WorkflowState.DECISION_ENGINE && <QuantumDecisionEngine />}
           {workflow === WorkflowState.DIGITAL_TWIN && <DigitalTwinEngine />}
           {workflow === WorkflowState.CITIZEN_ADVISORY && <CitizenAdvisoryCenter />}
+          {workflow === WorkflowState.ENFORCEMENT_INTEL && (
+            <VanGuard 
+              setWorkflow={setWorkflow} 
+              onDeployEnforcement={(rec) => {
+                setActiveEnforcementInput(rec);
+                addLog(`Enforcement payload for ${rec.cellName} locked as CATALYST input`, 'success');
+              }} 
+            />
+          )}
+          {workflow === WorkflowState.CARBON_CAPTURE && (
+            <CarbonCaptureIntelligence activeEnforcementInput={activeEnforcementInput} />
+          )}
         </div>
 
         <div className="h-14 glass border-t border-slate-200 dark:border-slate-800 flex items-center px-6 gap-6 overflow-hidden z-20">

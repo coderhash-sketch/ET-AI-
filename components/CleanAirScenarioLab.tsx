@@ -189,12 +189,12 @@ const CleanAirScenarioLab: React.FC<CleanAirScenarioLabProps> = ({ setWorkflow }
 
           {setWorkflow && (
             <button 
-              onClick={() => setWorkflow(WorkflowState.QUANTUM_OPTIMIZATION)}
+              onClick={() => setWorkflow(WorkflowState.AETHEL_Q)}
               className="w-full py-4 bg-gradient-to-r from-cyan-500/20 to-lime-500/20 border border-cyan-500/30 rounded-2xl flex items-center justify-center gap-3 group hover:from-cyan-500/30 hover:to-lime-500/30 transition-all shadow-[0_0_20px_rgba(34,211,238,0.1)]"
             >
               <Zap className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" />
               <div className="text-left">
-                <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Quantum Engine</p>
+                <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Aethel Q</p>
                 <p className="text-[8px] font-mono text-slate-500 uppercase">Optimize Strategy</p>
               </div>
             </button>

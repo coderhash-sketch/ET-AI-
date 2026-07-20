@@ -1,25 +1,24 @@
 
 export enum WorkflowState {
   IDLE = 'idle',
-  CARBON_RESEARCH = 'carbon-research',
+  AIRSIGHT_AI = 'airsight-ai',
+  ORIGIN_X = 'origin-x',
   AI_FILTERING = 'ai-filtering',
-  QUANTUM_SIMULATION = 'quantum-simulation',
-  RESULTS = 'results',
+  AETHEL_Q = 'aethel-q',
   DIGITAL_TWIN = 'digital-twin',
   CONFIG = 'config',
   LOGS = 'logs',
   SUSTAINABILITY = 'sustainability',
   CITY_ADVISOR = 'city-advisor',
-  URBAN_INDEX = 'urban-index',
-  AIR_STORY = 'air-story',
+  STRATO_SIM = 'strato-sim',
   EXPLAINABLE_AI = 'explainable-ai',
-  POLLUTION_JOURNEY = 'pollution-journey',
-  CLIMATE_NETWORK = 'climate-network',
   SCENARIO_LAB = 'scenario-lab',
-  QUANTUM_OPTIMIZATION = 'quantum-optimization',
   PREDICTION = 'prediction',
   DECISION_ENGINE = 'decision-engine',
-  CITIZEN_ADVISORY = 'citizen-advisory'
+  CITIZEN_ADVISORY = 'citizen-advisory',
+  ENFORCEMENT_INTEL = 'enforcement-intel',
+  CARBON_CAPTURE = 'carbon-capture',
+  SKY_WEAVE = 'sky-weave'
 }
 
 export interface MaterialCandidate {

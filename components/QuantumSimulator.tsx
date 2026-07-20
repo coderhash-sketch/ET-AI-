@@ -17,7 +17,7 @@ const QuantumSimulator: React.FC<QuantumSimulatorProps> = ({ selectedMaterial })
   const [thetas, setThetas] = useState<number[]>([0.1, 0.5, 1.2, 0.8]);
   const [showDetails, setShowDetails] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
-  const logEndRef = useRef<HTMLDivElement>(null);
+  const logContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const metal = selectedMaterial?.metal || 'Zr';
@@ -51,7 +51,9 @@ const QuantumSimulator: React.FC<QuantumSimulatorProps> = ({ selectedMaterial })
   }, [selectedMaterial]);
 
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+    }
   }, [logs]);
 
   const qubitConfigs = [
@@ -191,14 +193,13 @@ const QuantumSimulator: React.FC<QuantumSimulatorProps> = ({ selectedMaterial })
               <Terminal className="w-3 h-3" />
               <span className="uppercase tracking-widest font-black">Qiskit Runtime Logs</span>
             </div>
-            <div className="flex-1 overflow-y-auto space-y-1 scrollbar-hide">
+            <div ref={logContainerRef} className="flex-1 overflow-y-auto space-y-1 scrollbar-hide">
               {logs.map((log, i) => (
                 <div key={i} className="text-cyan-400/80">
                   <span className="text-slate-600 mr-2">{">>>"}</span>
                   {log}
                 </div>
               ))}
-              <div ref={logEndRef} />
             </div>
           </div>
         </div>
